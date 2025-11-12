@@ -92,6 +92,7 @@ for _,player in ipairs(game.Players:GetPlayers()) do
                 task.wait()
                 game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
                 task.wait()
+                setfpscap(30)
                 for i,v in next, workspace:GetDescendants() do
                 if v:IsA'Seat' then
                 v:Destroy()
