@@ -48,7 +48,6 @@ local function farmLoop()
 							}
 						}
 						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					wait(4)
 					local args = {
 								[1] = {
 									["Goal"] = "Console Move",
@@ -56,7 +55,6 @@ local function farmLoop()
 								}
 							}
 							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					wait(7)
 					local args = {
 								[1] = {
 									["Goal"] = "Console Move",
@@ -64,7 +62,6 @@ local function farmLoop()
 								}
 							}
 							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					wait(3.5)
 					local args = {
 								[1] = {
 									["Goal"] = "Console Move",
@@ -72,7 +69,6 @@ local function farmLoop()
 								}
 							}
 							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					wait(6)
 				end
             end
             wait(0.1)
@@ -96,6 +92,7 @@ for _,player in ipairs(game.Players:GetPlayers()) do
             end
             if msg == ".fa" then
                 if savedPos then
+					wait(5)
                     farming = true
                     print("[.farm] Started farming loop.")
                 else
