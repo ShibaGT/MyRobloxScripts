@@ -41,7 +41,7 @@ local function farmLoop()
                 teleport(savedPos)
                 wait(2.5)
                 resetCharacter()
-                lp.CharacterAdded:Wait()
+                wait(1)
             end
             wait(0.5)
         else
