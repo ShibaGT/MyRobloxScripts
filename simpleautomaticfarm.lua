@@ -13,69 +13,74 @@ local function teleport(pos)
 end
 
 local function farmLoop()
-    while true do
-        if farming and savedPos then
-            if lp.Character and lp.Character.PrimaryPart then
-                teleport(savedPos)
-				local args = {
-				[1] = {
-					["Goal"] = "KeyPress",
-					["Key"] = Enum.KeyCode.G
-				}
-				}
-				game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-				if not backpack:FindFirstChild("Jet Dive") then
-					local args = {
-							[1] = {
-								["Goal"] = "Console Move",
-								["Tool"] = game:GetService("Players").LocalPlayer.Backpack["Thunder Kick"]
-							}
+	while true do
+		local success, err = pcall(function()
+			if farming and savedPos then
+				if lp.Character and lp.Character.PrimaryPart then
+					teleport(savedPos)
+
+					-- Press G
+					game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+						{
+							Goal = "KeyPress",
+							Key = Enum.KeyCode.G
 						}
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					
-					local args = {
-							[1] = {
-								["Goal"] = "Console Move",
-								["Tool"] = game:GetService("Players").LocalPlayer.Backpack["Flamewave Cannon"]
+					})
+
+					if not backpack:FindFirstChild("Jet Dive") then
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = game:GetService("Players").LocalPlayer.Backpack["Thunder Kick"]
 							}
-						}
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-				else
-					local args = {
-							[1] = {
-								["Goal"] = "Console Move",
-								["Tool"] = backpack["Jet Dive"]
+						})
+
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = game:GetService("Players").LocalPlayer.Backpack["Flamewave Cannon"]
 							}
-						}
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					local args = {
-								[1] = {
-									["Goal"] = "Console Move",
-									["Tool"] = backpack["Blitz Shot"]
-								}
+						})
+					else
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = backpack["Jet Dive"]
 							}
-							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					local args = {
-								[1] = {
-									["Goal"] = "Console Move",
-									["Tool"] = backpack["Ignition Burst"]
-								}
+						})
+
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = backpack["Blitz Shot"]
 							}
-							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
-					local args = {
-								[1] = {
-									["Goal"] = "Console Move",
-									["Tool"] = backpack["Machine Gun Blows"]
-								}
+						})
+
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = backpack["Ignition Burst"]
 							}
-							game:GetService("Players").LocalPlayer.Character.Communicate:FireServer(unpack(args))
+						})
+
+						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
+							{
+								Goal = "Console Move",
+								Tool = backpack["Machine Gun Blows"]
+							}
+						})
+					end
 				end
-            end
-            wait(0.1)
-        else
-            wait(0.1)
-        end
-    end
+			end
+		end)
+
+		if not success then
+			warn("farmLoop error:", err)
+			task.wait(5) -- retry delay after error
+		else
+			task.wait(0.1)
+		end
+	end
 end
 
 spawn(farmLoop)
