@@ -39,10 +39,9 @@ local function farmLoop()
         if farming and savedPos then
             if lp.Character and lp.Character.PrimaryPart then
                 teleport(savedPos)
-                wait(1.5)
-                teleport(savedPos)
-                wait(1)
+                wait(2.5)
                 resetCharacter()
+                wait(6)
             end
             wait(0.5)
         else
