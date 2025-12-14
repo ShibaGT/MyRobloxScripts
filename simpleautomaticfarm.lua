@@ -18,8 +18,7 @@ local function farmLoop()
 			if farming and savedPos then
 				if lp.Character and lp.Character.PrimaryPart then
 					teleport(savedPos)
-
-					-- Press G
+					wait(0.1)
 					game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
 						{
 							Goal = "KeyPress",
@@ -75,8 +74,8 @@ local function farmLoop()
 		end)
 
 		if not success then
-			warn("farmLoop error:", err)
-			task.wait(5) -- retry delay after error
+			print("farmLoop error:", err)
+			task.wait(5) 
 		else
 			task.wait(0.1)
 		end
