@@ -12,74 +12,76 @@ local function teleport(pos)
     end
 end
 
+local function safeFire(args)
+    pcall(function()
+        if lp.Character and lp.Character:FindFirstChild("Communicate") then
+            lp.Character.Communicate:FireServer(unpack(args))
+        end
+    end)
+end
+
+local function useTool(toolName)
+    local tool = backpack:FindFirstChild(toolName)
+    if not tool then
+        return false
+    end
+
+    safeFire({
+        [1] = {
+            ["Goal"] = "Console Move",
+            ["Tool"] = tool
+        }
+    })
+
+    return true
+end
+
 local function farmLoop()
-	while true do
-		local success, err = pcall(function()
-			if farming and savedPos then
-				if lp.Character and lp.Character.PrimaryPart then
-					teleport(savedPos)
-					wait(0.1)
-					game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-						{
-							Goal = "KeyPress",
-							Key = Enum.KeyCode.G
-						}
-					})
+    while true do
+        if not farming or not savedPos then
+            task.wait(0.1)
+            continue
+        end
 
-					if not backpack:FindFirstChild("Jet Dive") then
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = game:GetService("Players").LocalPlayer.Backpack["Thunder Kick"]
-							}
-						})
+        if not (lp.Character and lp.Character.PrimaryPart) then
+            task.wait(0.1)
+            continue
+        end
+        task.wait(0.1)
+        teleport(savedPos)
+        -- Press G
+        safeFire({
+            [1] = {
+                ["Goal"] = "KeyPress",
+                ["Key"] = Enum.KeyCode.G
+            }
+        })
 
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = game:GetService("Players").LocalPlayer.Backpack["Flamewave Cannon"]
-							}
-						})
-					else
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = backpack["Jet Dive"]
-							}
-						})
+        -- If Jet Dive is missing, try fallback combo
+        if not backpack:FindFirstChild("Jet Dive") then
+            local ok1 = useTool("Thunder Kick")
+            local ok2 = useTool("Flamewave Cannon")
+            local ok3 = useTool("Speedblitz Dropkick")
 
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = backpack["Blitz Shot"]
-							}
-						})
+            if not (ok1 and ok2 and ok3) then
+                task.wait(5) -- retry later if missing
+                continue
+            end
+        else
+            local needed = {
+                "Jet Dive",
+                "Blitz Shot",
+                "Ignition Burst",
+                "Machine Gun Blows"
+            }
 
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = backpack["Ignition Burst"]
-							}
-						})
-
-						game:GetService("Players").LocalPlayer.Character.Communicate:FireServer({
-							{
-								Goal = "Console Move",
-								Tool = backpack["Machine Gun Blows"]
-							}
-						})
-					end
-				end
-			end
-		end)
-
-		if not success then
-			print("farmLoop error:", err)
-			task.wait(5) 
-		else
-			task.wait(0.1)
-		end
-	end
+            for _, toolName in ipairs(needed) do
+                if not useTool(toolName) then
+                    task.wait(5) -- retry later if ANY are missing
+                end
+            end
+        end
+    end
 end
 
 spawn(farmLoop)
