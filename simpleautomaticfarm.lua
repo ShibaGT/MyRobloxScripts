@@ -36,6 +36,26 @@ local function useTool(toolName)
     return true
 end
 
+local function isDeadBodyNearby(radius)
+    local character = lp.Character
+    if not character or not character.PrimaryPart then return false end
+
+    local characterPosition = character.PrimaryPart.Position
+
+    for _, descendant in ipairs(game.Workspace:GetDescendants()) do
+        if descendant:IsA("Model") and descendant ~= character then
+            local humanoid = descendant:FindFirstChildOfClass("Humanoid")
+            if humanoid and humanoid.Health <= 0 then
+                local part = descendant.PrimaryPart or descendant:FindFirstChildWhichIsA("BasePart")
+                if part and (part.Position - characterPosition).Magnitude <= radius then
+                    return true
+                end
+            end
+        end
+    end
+    return false
+end
+
 local function farmLoop()
     while true do
         if not farming or not savedPos then
@@ -49,7 +69,7 @@ local function farmLoop()
         end
         task.wait(0.1)
         teleport(savedPos)
-        -- Press G
+
         safeFire({
             [1] = {
                 ["Goal"] = "KeyPress",
@@ -57,29 +77,31 @@ local function farmLoop()
             }
         })
 
-        -- If Jet Dive is missing, try fallback combo
-        if not backpack:FindFirstChild("Jet Dive") then
-            local ok1 = useTool("Thunder Kick")
-            local ok2 = useTool("Flamewave Cannon")
-            local ok3 = useTool("Speedblitz Dropkick")
+        if isDeadBodyNearby(20) then
+            if not backpack:FindFirstChild("Jet Dive") then
+                local ok1 = useTool("Thunder Kick")
+                local ok2 = useTool("Flamewave Cannon")
 
-            if not (ok1 and ok2 and ok3) then
-                task.wait(5) -- retry later if missing
-                continue
-            end
-        else
-            local needed = {
-                "Jet Dive",
-                "Blitz Shot",
-                "Ignition Burst",
-                "Machine Gun Blows"
-            }
+                if not (ok1 and ok2 and ok3) then
+                    task.wait(5)
+                    continue
+                end
+            else
+                local needed = {
+                    "Jet Dive",
+                    "Blitz Shot",
+                    "Ignition Burst",
+                    "Machine Gun Blows"
+                }
 
-            for _, toolName in ipairs(needed) do
-                if not useTool(toolName) then
-                    task.wait(5) -- retry later if ANY are missing
+                for _, toolName in ipairs(needed) do
+                    if not useTool(toolName) then
+                        task.wait(5)
+                    end
                 end
             end
+        else
+            task.wait(1)
         end
     end
 end
