@@ -83,6 +83,21 @@ for _,player in ipairs(game.Players:GetPlayers()) do
                 print("[.stop] Stopped farming.")
             end   
             if msg == ".ra" then
+                if getconnections then
+		            for _, connection in pairs(getconnections(speaker.Idled)) do
+			            if connection["Disable"] then
+				            connection["Disable"](connection)
+			            elseif connection["Disconnect"] then
+				            connection["Disconnect"](connection)
+			            end
+		            end
+	            else
+		            speaker.Idled:Connect(function()
+			            Services.VirtualUser:CaptureController()
+			            Services.VirtualUser:ClickButton2(Vector2.new())
+		            end)
+	            end
+                    
                 local UserSettings = UserSettings()
                 UserSettings.GameSettings.MasterVolume = 0
                 task.wait()
@@ -91,25 +106,7 @@ for _,player in ipairs(game.Players:GetPlayers()) do
                 game:GetService("Players").LocalPlayer.PlayerGui:Destroy()
                 task.wait()
                 game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
-                task.wait()
-                
-                for i,v in next, workspace:GetDescendants() do
-                if v:IsA'Seat' then
-                v:Destroy()
-                end
-                end
-                task.wait()
-                repeat task.wait() until game:GetService("Players").LocalPlayer
-                local connections = getconnections or get_signal_cons
-                if connections then
-                    for _, v in pairs(connections(game:GetService("Players").LocalPlayer.Idled)) do
-                        if v.Disable then
-                            v:Disable()
-                        elseif v.Disconnect then
-                            v:Disconnect()
-                        end
-                    end
-                end
+
                 print("[.ram] Removed assets & more.")
             end     
         end
