@@ -37,23 +37,7 @@ local function useTool(toolName)
 end
 
 local function isDeadBodyNearby(radius)
-    local character = lp.Character
-    if not character or not character.PrimaryPart then return false end
-
-    local characterPosition = character.PrimaryPart.Position
-
-    for _, descendant in ipairs(game.Workspace:GetDescendants()) do
-        if descendant:IsA("Model") and descendant ~= character then
-            local humanoid = descendant:FindFirstChildOfClass("Humanoid")
-            if humanoid and humanoid.Health <= 0 then
-                local part = descendant.PrimaryPart or descendant:FindFirstChildWhichIsA("BasePart")
-                if part and (part.Position - characterPosition).Magnitude <= radius then
-                    return true
-                end
-            end
-        end
-    end
-    return false
+    return true
 end
 
 local function farmLoop()
