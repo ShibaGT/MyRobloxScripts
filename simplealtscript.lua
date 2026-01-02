@@ -83,21 +83,6 @@ for _,player in ipairs(game.Players:GetPlayers()) do
                 print("[.stop] Stopped farming.")
             end   
             if msg == ".ra" then
-                if getconnections then
-		            for _, connection in pairs(getconnections(speaker.Idled)) do
-			            if connection["Disable"] then
-				            connection["Disable"](connection)
-			            elseif connection["Disconnect"] then
-				            connection["Disconnect"](connection)
-			            end
-		            end
-	            else
-		            speaker.Idled:Connect(function()
-			            Services.VirtualUser:CaptureController()
-			            Services.VirtualUser:ClickButton2(Vector2.new())
-		            end)
-	            end
-                    
                 local UserSettings = UserSettings()
                 UserSettings.GameSettings.MasterVolume = 0
                 task.wait()
