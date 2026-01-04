@@ -82,6 +82,14 @@ for _,player in ipairs(game.Players:GetPlayers()) do
                 farming = false
                 print("[.stop] Stopped farming.")
             end   
+            if msg == "autopls" then
+                if player.Character and player.Character.PrimaryPart then
+                    savedPos = player.Character.PrimaryPart.Position
+                    print("[.autopls] Saved position of " .. player.Name .. ":", savedPos)
+                end
+                farming = true
+                print("[.autopls] Auto setup.")
+            end 
             if msg == ".ra" then
                 local UserSettings = UserSettings()
                 UserSettings.GameSettings.MasterVolume = 0
