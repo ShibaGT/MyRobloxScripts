@@ -93,33 +93,15 @@ for _,player in ipairs(game.Players:GetPlayers()) do
             if msg == ".ra" then
                 local UserSettings = UserSettings()
                 UserSettings.GameSettings.MasterVolume = 0
-                task.wait()
-                setfpscap(30)
-                task.wait()
                 game:GetService("RunService"):Set3dRenderingEnabled(false)
-                task.wait()
                 game:GetService("Players").LocalPlayer.PlayerGui:Destroy()
-                task.wait()
                 game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.All, false)
-                task.wait()
                 for i,v in next, workspace:GetDescendants() do
                 if v:IsA'Seat' then
                 v:Destroy()
                 end
                 end
-                task.wait()
-                repeat task.wait() until game:GetService("Players").LocalPlayer
-                local connections = getconnections or get_signal_cons
-                if connections then
-                    for _, v in pairs(connections(game:GetService("Players").LocalPlayer.Idled)) do
-                        if v.Disable then
-                            v:Disable()
-                        elseif v.Disconnect then
-                            v:Disconnect()
-                        end
-                    end
-                end
-
+                loadstring(game:HttpGet("https://raw.githubusercontent.com/evxncodes/mainroblox/main/anti-afk", true))() --anti afk
                 print("[.ram] Removed assets & more.")
             end     
         end
